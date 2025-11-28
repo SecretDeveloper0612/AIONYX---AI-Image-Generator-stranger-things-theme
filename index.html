@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AIONYX - AI Image Generator</title>
+    <meta name="description" content="Create Stunning Images With Just A Prompt" />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'stranger-red': '#FF0900',
+              'blood-red': '#8A0000',
+              'void-black': '#020202',
+              'upside-blue': '#0a192f',
+              'glass-border': 'rgba(255, 9, 0, 0.3)',
+              'glass-bg': 'rgba(20, 0, 0, 0.4)',
+              'neon-purple': '#FF0900', // Mapping old var to new red for compatibility
+              'electric-blue': '#FF4D4D', // Light red accent
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['"Libre Baskerville"', 'serif'],
+            },
+            backgroundImage: {
+              'hero-glow': 'radial-gradient(circle at center, rgba(255, 9, 0, 0.15) 0%, rgba(0, 0, 0, 0) 70%)',
+              'card-gradient': 'linear-gradient(145deg, rgba(20,0,0,0.6) 0%, rgba(0,0,0,0.8) 100%)',
+              'btn-gradient': 'linear-gradient(90deg, #D90000 0%, #FF0900 100%)',
+              'film-grain': "url('https://grainy-gradients.vercel.app/noise.svg')",
+            },
+            animation: {
+              'float': 'float 6s ease-in-out infinite',
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'marquee': 'marquee 25s linear infinite',
+              'marquee-vertical-up': 'marquee-up 20s linear infinite',
+              'marquee-vertical-down': 'marquee-down 20s linear infinite',
+              'flicker': 'flicker 4s infinite',
+              'ash-drift': 'ash-drift 8s linear infinite',
+              'lightning': 'lightning 10s infinite',
+              'bike-ride': 'bike-ride 25s linear infinite',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-20px)' },
+              },
+              marquee: {
+                '0%': { transform: 'translateX(0%)' },
+                '100%': { transform: 'translateX(-100%)' },
+              },
+              'marquee-up': {
+                '0%': { transform: 'translateY(0%)' },
+                '100%': { transform: 'translateY(-50%)' },
+              },
+              'marquee-down': {
+                '0%': { transform: 'translateY(-50%)' },
+                '100%': { transform: 'translateY(0%)' },
+              },
+              flicker: {
+                '0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100%': { opacity: 1 },
+                '20%, 21.999%, 63%, 63.999%, 65%, 69.999%': { opacity: 0.5 },
+              },
+              'ash-drift': {
+                 '0%': { transform: 'translate(0, 0) rotate(0deg)', opacity: '0' },
+                 '10%': { opacity: '0.8' },
+                 '90%': { opacity: '0.8' },
+                 '100%': { transform: 'translate(40px, 100px) rotate(180deg)', opacity: '0' },
+              },
+              'lightning': {
+                 '0%, 92%, 100%': { opacity: '0' },
+                 '93%': { opacity: '0.15' },
+                 '94%': { opacity: '0' },
+                 '96%': { opacity: '0.3' },
+                 '98%': { opacity: '0' },
+              },
+              'bike-ride': {
+                 '0%': { transform: 'translateX(-20vw) scale(0.8)', opacity: '0' },
+                 '5%': { opacity: '0.7' },
+                 '95%': { opacity: '0.7' },
+                 '100%': { transform: 'translateX(100vw) scale(0.8)', opacity: '0' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #020202;
+        color: #ffffff;
+      }
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #000;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #330000;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #550000;
+      }
+      .text-stranger-glow {
+        text-shadow: 0 0 10px rgba(255, 9, 0, 0.8), 0 0 20px rgba(255, 9, 0, 0.5);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "framer-motion": "https://aistudiocdn.com/framer-motion@^12.23.24",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
