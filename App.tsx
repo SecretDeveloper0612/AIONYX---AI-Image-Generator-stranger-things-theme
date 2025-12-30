@@ -24,50 +24,74 @@ const App: React.FC = () => {
     // Initialize Lenis Smooth Scroll
     // @ts-ignore
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.4,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1,
+      wheelMultiplier: 1.1,
+      lerp: 0.1, // Added for extra smoothness
       smoothTouch: false,
-      touchMultiplier: 2,
-      infinite: false,
     });
 
     lenisRef.current = lenis;
 
     // Sync Lenis with GSAP ScrollTrigger
     // @ts-ignore
-    lenis.on('scroll', ScrollTrigger.update);
+    const updateScrollTrigger = () => ScrollTrigger.update();
+    lenis.on('scroll', updateScrollTrigger);
 
     // @ts-ignore
     gsap.ticker.add((time: number) => {
       lenis.raf(time * 1000);
     });
 
+    // Performance optimizations
     // @ts-ignore
     gsap.ticker.lagSmoothing(0);
+    
+    // Normalize scroll to prevent native vs smooth competition
+    // @ts-ignore
+    ScrollTrigger.normalizeScroll(true);
+    // @ts-ignore
+    ScrollTrigger.config({ ignoreMobileResize: true });
+
+    // Refresh triggers after a small delay to ensure DOM is settled
+    const refreshTimer = setTimeout(() => {
+      // @ts-ignore
+      ScrollTrigger.refresh();
+    }, 100);
 
     return () => {
       lenis.destroy();
+      // @ts-ignore
+      gsap.ticker.remove(updateScrollTrigger);
+      clearTimeout(refreshTimer);
     };
   }, [isLoading]);
+
+  // Ensure scroll triggers refresh when switching views
+  useEffect(() => {
+    if (!isLoading) {
+      // @ts-ignore
+      setTimeout(() => ScrollTrigger.refresh(), 50);
+    }
+  }, [currentView, isLoading]);
 
   return (
     <div className="min-h-screen bg-void-black text-white font-sans selection:bg-stranger-red selection:text-white overflow-x-hidden relative">
       {/* Intro Loader Sequence */}
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {isLoading && (
-          <IntroLoader onComplete={() => setIsLoading(false)} />
+          <IntroLoader key="loader" onComplete={() => setIsLoading(false)} />
         )}
       </AnimatePresence>
 
-      {/* Global Film Grain Overlay */}
-      <div className="fixed inset-0 pointer-events-none z-50 opacity-[0.07] mix-blend-overlay" style={{ backgroundImage: 'url("https://grainy-gradients.vercel.app/noise.svg")' }}></div>
+      {/* Global Film Grain Overlay - Optimized opacity */}
+      <div className="fixed inset-0 pointer-events-none z-50 opacity-[0.05] mix-blend-overlay" style={{ backgroundImage: 'url("https://grainy-gradients.vercel.app/noise.svg")' }}></div>
       
       {!isLoading && (
-        <>
+        <div className="relative">
           <Navbar onNavigate={setCurrentView} />
           <main>
             {currentView === 'home' ? (
@@ -81,14 +105,17 @@ const App: React.FC = () => {
                   <Testimonials />
                   <FAQ />
                   <Blog />
+                  <Footer />
                 </div>
               </div>
             ) : (
-              <ImageGenerator />
+              <>
+                <ImageGenerator />
+                <Footer />
+              </>
             )}
           </main>
-          <Footer />
-        </>
+        </div>
       )}
     </div>
   );
