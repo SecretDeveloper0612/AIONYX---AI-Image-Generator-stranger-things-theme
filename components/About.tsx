@@ -1,15 +1,46 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useRef } from 'react';
 import { SectionWrapper } from './ui/SectionWrapper';
 import { Target, Eye, Users, Zap } from 'lucide-react';
 
 export const About: React.FC = () => {
+  const leftRef = useRef(null);
+  const rightRef = useRef(null);
+
+  useEffect(() => {
+    // @ts-ignore
+    const gs = window.gsap;
+    if (!gs) return;
+
+    gs.from(leftRef.current, {
+      scrollTrigger: {
+        trigger: leftRef.current,
+        start: "top 80%",
+      },
+      x: -50,
+      opacity: 0,
+      duration: 1.2,
+      ease: "power3.out"
+    });
+
+    gs.from(gs.utils.selector(rightRef.current)(".reveal-card"), {
+      scrollTrigger: {
+        trigger: rightRef.current,
+        start: "top 80%",
+      },
+      y: 50,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.3,
+      ease: "power3.out"
+    });
+  }, []);
+
   return (
     <SectionWrapper id="about" className="bg-void-black">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         
         {/* Left Image Side */}
-        <div className="relative">
+        <div ref={leftRef} className="relative">
           <h2 className="text-4xl md:text-5xl font-bold font-display mb-8">
             Born From A <br />
             <span className="text-stranger-red text-stranger-glow">Passion For The Unknown</span>
@@ -37,18 +68,11 @@ export const About: React.FC = () => {
                 </div>
              </div>
           </div>
-          <button className="mt-8 px-8 py-3 rounded-sm border border-stranger-red/40 hover:bg-stranger-red/10 transition-colors flex items-center gap-2 text-stranger-red font-bold tracking-widest uppercase">
-            View Our Story <Eye className="w-4 h-4" />
-          </button>
         </div>
 
         {/* Right Content Side */}
-        <div className="space-y-8">
-          {/* Mission */}
-          <motion.div 
-            whileHover={{ y: -5 }}
-            className="p-6 rounded-sm bg-glass-bg border border-glass-border backdrop-blur-md hover:border-stranger-red/60 transition-colors"
-          >
+        <div ref={rightRef} className="space-y-8">
+          <div className="reveal-card p-6 rounded-sm bg-glass-bg border border-glass-border backdrop-blur-md hover:border-stranger-red/60 transition-colors">
             <div className="flex justify-between items-start mb-4">
               <h3 className="text-xl font-bold font-display">Mission</h3>
               <Target className="text-stranger-red" />
@@ -59,13 +83,9 @@ export const About: React.FC = () => {
             <div className="h-24 w-full rounded overflow-hidden relative grayscale hover:grayscale-0 transition-all">
                <img src="https://picsum.photos/400/200?random=11" alt="Mission" className="w-full h-full object-cover opacity-70" />
             </div>
-          </motion.div>
+          </div>
 
-          {/* Vision */}
-          <motion.div 
-            whileHover={{ y: -5 }}
-            className="p-6 rounded-sm bg-glass-bg border border-glass-border backdrop-blur-md hover:border-stranger-red/60 transition-colors"
-          >
+          <div className="reveal-card p-6 rounded-sm bg-glass-bg border border-glass-border backdrop-blur-md hover:border-stranger-red/60 transition-colors">
              <div className="flex justify-between items-start mb-4">
               <h3 className="text-xl font-bold font-display">Vision</h3>
               <Eye className="text-stranger-red" />
@@ -91,7 +111,7 @@ export const About: React.FC = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
 
       </div>

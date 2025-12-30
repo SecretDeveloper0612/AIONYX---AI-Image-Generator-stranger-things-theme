@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from './ui/Button';
 import { SectionWrapper } from './ui/SectionWrapper';
@@ -16,6 +16,65 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
+  const monsterRef = useRef(null);
+  const contentRef = useRef(null);
+  const elevenRef = useRef(null);
+  const demoRef = useRef(null);
+
+  useEffect(() => {
+    // @ts-ignore
+    const gs = window.gsap;
+    if (!gs) return;
+
+    // Mind Flayer Parallax & Scale
+    gs.to(monsterRef.current, {
+      scrollTrigger: {
+        trigger: "#home",
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
+      y: 150,
+      scale: 1.2,
+      opacity: 0,
+    });
+
+    // Content fade and lift
+    gs.to(contentRef.current, {
+      scrollTrigger: {
+        trigger: "#home",
+        start: "top top",
+        end: "50% top",
+        scrub: true,
+      },
+      y: -100,
+      opacity: 0,
+    });
+
+    // Character Parallax
+    gs.to(elevenRef.current, {
+      scrollTrigger: {
+        trigger: "#home",
+        start: "top top",
+        end: "bottom top",
+        scrub: 1,
+      },
+      y: -250,
+      x: 50,
+    });
+
+    gs.to(demoRef.current, {
+      scrollTrigger: {
+        trigger: "#home",
+        start: "top top",
+        end: "bottom top",
+        scrub: 1.5,
+      },
+      y: -150,
+      x: -50,
+    });
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -45,8 +104,6 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
       className="pt-32 pb-0 flex flex-col items-center justify-center min-h-screen bg-hero-glow overflow-hidden relative"
       animate={false}
     >
-      {/* --- ATMOSPHERIC EFFECTS --- */}
-      
       {/* 1. Ash / Spores */}
       {Array.from({ length: 30 }).map((_, i) => (
         <div
@@ -64,11 +121,9 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
       {/* 2. Red Lightning Overlay */}
       <div className="absolute inset-0 bg-red-600/10 z-0 animate-lightning pointer-events-none mix-blend-color-dodge"></div>
 
-      {/* 3. Shadow Monster (Mind Flayer) Background - FIXED VISIBILITY */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] opacity-60 pointer-events-none z-0">
-         {/* Center Core - Dark Red/Grey Smoke (Changed from pure black to visible dark red) */}
+      {/* 3. Shadow Monster (Mind Flayer) Background */}
+      <div ref={monsterRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] opacity-60 pointer-events-none z-0">
          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#2a0505] blur-[120px] animate-pulse-slow mix-blend-screen"></div>
-         {/* Tentacles - Visible Smoke Trails */}
          {[0, 60, 120, 180, 240, 300].map((deg, i) => (
             <div 
               key={i} 
@@ -81,66 +136,50 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
          ))}
       </div>
 
-      {/* --- CHARACTER PROPS & SILHOUETTES --- */}
-
-      {/* 4. ELEVEN (Levitating Right) - FIXED VISIBILITY */}
-      <div className="absolute top-20 right-[5%] md:right-[15%] z-20 pointer-events-none hidden md:block animate-float">
+      {/* 4. ELEVEN (Levitating Right) */}
+      <div ref={elevenRef} className="absolute top-20 right-[5%] md:right-[15%] z-20 pointer-events-none hidden md:block animate-float">
         <div className="relative w-64 h-96 opacity-100 drop-shadow-[0_0_15px_rgba(255,9,0,0.3)]">
-           {/* Red Aura */}
            <div className="absolute inset-0 bg-stranger-red/20 blur-xl rounded-full animate-pulse-slow"></div>
-           {/* Silhouette SVG - Changed fill from black to gray-900 to stand out against void */}
            <svg viewBox="0 0 100 200" className="w-full h-full fill-gray-900 stroke-stranger-red stroke-[1]">
               <path d="M45,20 C55,20 60,30 60,40 C60,45 58,48 58,55 L58,60 L75,60 C85,60 90,55 95,50 L95,55 C90,65 85,70 75,70 L60,70 L60,110 L70,180 L80,180 L80,190 L55,190 L50,130 L45,190 L20,190 L20,180 L30,180 L40,110 L40,70 L30,70 L30,55 L40,55 C40,48 38,45 40,40 C40,30 35,20 45,20 Z" />
-              {/* Glowing Hand */}
               <circle cx="95" cy="52" r="4" className="fill-stranger-red animate-ping" />
            </svg>
         </div>
       </div>
 
-      {/* 5. DEMOGORGON (Lurking Left) - FIXED VISIBILITY */}
-      <div className="absolute top-10 left-[2%] md:left-[10%] z-10 pointer-events-none opacity-60 hidden md:block">
+      {/* 5. DEMOGORGON (Lurking Left) */}
+      <div ref={demoRef} className="absolute top-10 left-[2%] md:left-[10%] z-10 pointer-events-none opacity-60 hidden md:block">
          <div className="w-80 h-80 animate-pulse-slow">
-            {/* Removed mix-blend-multiply, lightened fill slightly */}
             <svg viewBox="0 0 200 200" className="w-full h-full fill-[#1a0505] drop-shadow-[0_0_10px_rgba(50,0,0,0.8)]">
-               {/* Flower Face Shape */}
                <path d="M100,50 Q120,20 140,50 T180,90 Q190,120 160,140 T100,180 Q40,140 20,120 T60,50 Q80,20 100,50 Z" className="blur-[1px]" />
                <path d="M100,100 L100,60 M100,100 L140,80 M100,100 L130,130 M100,100 L70,130 M100,100 L60,80" stroke="#500" strokeWidth="3" />
             </svg>
          </div>
       </div>
 
-      {/* 6. Bike Group (Bottom Parallax) - FIXED VISIBILITY */}
+      {/* 6. Bike Group (Bottom Parallax) */}
       <div className="absolute bottom-20 md:bottom-32 left-0 w-full z-10 pointer-events-none overflow-hidden h-40">
-         {/* ADDED: Fog layer behind bikes to create contrast for the black silhouette */}
          <div className="absolute bottom-0 w-full h-32 bg-gradient-to-t from-stranger-red/20 via-stranger-red/5 to-transparent blur-xl"></div>
-         
          <div className="animate-bike-ride absolute left-0 bottom-4 flex gap-12 opacity-100">
-             {/* MIKE - Changed fill to gray-900 and added red drop shadow */}
              <svg width="100" height="80" viewBox="0 0 100 80" className="text-gray-900 fill-current drop-shadow-[0_0_5px_rgba(255,9,0,0.8)] transform scale-100">
                 <g transform="translate(0, 0)">
                    <circle cx="20" cy="60" r="12" fill="none" stroke="currentColor" strokeWidth="3" />
                    <circle cx="60" cy="60" r="12" fill="none" stroke="currentColor" strokeWidth="3" />
                    <path d="M20 60 L35 45 L45 60 L60 60 M35 45 L30 35" stroke="currentColor" strokeWidth="3" fill="none" />
-                   {/* Body */}
                    <rect x="32" y="25" width="6" height="20" rx="2" fill="currentColor" />
                    <circle cx="35" cy="20" r="5" fill="currentColor" />
                 </g>
              </svg>
-             
-             {/* DUSTIN (Cap) */}
              <svg width="100" height="80" viewBox="0 0 100 80" className="text-gray-900 fill-current drop-shadow-[0_0_5px_rgba(255,9,0,0.8)] transform scale-90 translate-y-2">
                 <g transform="translate(0, 0)">
                    <circle cx="20" cy="60" r="12" fill="none" stroke="currentColor" strokeWidth="3" />
                    <circle cx="60" cy="60" r="12" fill="none" stroke="currentColor" strokeWidth="3" />
                    <path d="M20 60 L35 45 L45 60 L60 60 M35 45 L30 35" stroke="currentColor" strokeWidth="3" fill="none" />
                    <rect x="32" y="28" width="8" height="18" rx="2" fill="currentColor" />
-                   {/* Cap */}
                    <path d="M30 20 H40 V24 H30 Z M40 22 H44 V24 H40 Z" fill="currentColor" />
                    <circle cx="35" cy="22" r="5" fill="currentColor" />
                 </g>
              </svg>
-
-             {/* LUCAS (Bandana/Slingshot) */}
              <svg width="100" height="80" viewBox="0 0 100 80" className="text-gray-900 fill-current drop-shadow-[0_0_5px_rgba(255,9,0,0.8)] transform scale-105 -translate-y-1">
                 <g transform="translate(0, 0)">
                    <circle cx="20" cy="60" r="12" fill="none" stroke="currentColor" strokeWidth="3" />
@@ -148,19 +187,16 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
                    <path d="M20 60 L35 45 L45 60 L60 60 M35 45 L30 35" stroke="currentColor" strokeWidth="3" fill="none" />
                    <rect x="32" y="25" width="6" height="20" rx="2" fill="currentColor" />
                    <circle cx="35" cy="20" r="5" fill="currentColor" />
-                   {/* Bandana Tails */}
                    <path d="M32 20 L28 22 M32 20 L28 18" stroke="currentColor" strokeWidth="2" />
                 </g>
              </svg>
          </div>
       </div>
 
-      {/* Background Particles/Fog - Original */}
       <div className="absolute top-20 left-10 w-96 h-96 bg-stranger-red/10 rounded-full blur-[120px] pointer-events-none animate-flicker z-0"></div>
-      <div className="absolute top-40 right-10 w-[500px] h-[500px] bg-blood-red/5 rounded-full blur-[150px] pointer-events-none z-0"></div>
-
+      
       {/* Main Content */}
-      <div className="relative z-30 text-center max-w-4xl mx-auto mb-16 px-4">
+      <div ref={contentRef} className="relative z-30 text-center max-w-4xl mx-auto mb-16 px-4">
         <motion.div 
           variants={containerVariants}
           initial="hidden"
@@ -214,56 +250,6 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
                 </div>
              </motion.div>
            ))}
-        </div>
-      </div>
-
-      {/* New Showcase Section */}
-      <div className="w-full relative py-20 md:py-32 overflow-hidden bg-void-black mt-12 border-t border-stranger-red/10 z-20">
-        
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-10 mix-blend-color-dodge pointer-events-none"></div>
-        
-        <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none overflow-hidden select-none">
-          <div className="whitespace-nowrap flex animate-marquee w-max">
-            <span className="text-[120px] md:text-[180px] font-black font-display text-transparent bg-clip-text bg-gradient-to-b from-stranger-red to-black mx-4 leading-none stroke-red-900" style={{ WebkitTextStroke: '2px #4a0000'}}>
-              WHERE NIGHTMARES + CREATIVITY MERGE + 
-            </span>
-            <span className="text-[120px] md:text-[180px] font-black font-display text-transparent bg-clip-text bg-gradient-to-b from-stranger-red to-black mx-4 leading-none" style={{ WebkitTextStroke: '2px #4a0000'}}>
-               WHERE NIGHTMARES + CREATIVITY MERGE + 
-            </span>
-          </div>
-        </div>
-
-        <div className="container mx-auto relative h-[400px] md:h-[600px] w-full max-w-7xl flex items-center justify-center px-4">
-            
-            {/* Center Art */}
-            <div className="relative z-20 animate-float">
-               <div className="w-64 h-64 md:w-96 md:h-96 relative">
-                 <div className="absolute inset-0 bg-stranger-red/30 blur-[80px] rounded-full animate-flicker"></div>
-                 <img 
-                   src="https://images.unsplash.com/photo-1581822261290-991b73283543?q=80&w=2070&auto=format&fit=crop" 
-                   alt="Centerpiece" 
-                   className="w-full h-full object-cover rounded-full border-[4px] border-stranger-red/50 shadow-[0_0_50px_rgba(255,9,0,0.4)] relative z-10 sepia contrast-125" 
-                 />
-                 <div className="absolute -inset-8 border border-stranger-red/30 rounded-full md:border-2 border-dashed animate-spin-slow opacity-50"></div>
-               </div>
-            </div>
-
-            {/* Floating Images */}
-            {[
-              { top: 'top-10', left: 'left-4 md:left-32', delay: 0 },
-              { bottom: 'bottom-20', left: 'left-10 md:left-60', delay: 1 },
-              { top: 'top-12', right: 'right-6 md:right-40', delay: 0.5 },
-              { bottom: 'bottom-16', right: 'right-12 md:right-72', delay: 1.5 }
-            ].map((pos, i) => (
-              <motion.div 
-                key={i}
-                animate={{ y: [0, i % 2 === 0 ? -25 : 25, 0], rotate: [0, i % 2 === 0 ? -5 : 5, 0] }} 
-                transition={{ duration: 6 + i, repeat: Infinity, ease: "easeInOut", delay: pos.delay }}
-                className={`absolute ${pos.top || ''} ${pos.bottom || ''} ${pos.left || ''} ${pos.right || ''} w-24 h-24 md:w-48 md:h-48 rounded overflow-hidden border border-stranger-red/30 shadow-[0_0_20px_rgba(255,0,0,0.15)] z-10 bg-black/60 backdrop-blur-sm grayscale hover:grayscale-0 transition-all duration-500`}
-              >
-                <img src={`https://picsum.photos/400/400?random=${20+i}`} className="w-full h-full object-cover opacity-80 hover:opacity-100" alt="Art" />
-              </motion.div>
-            ))}
         </div>
       </div>
     </SectionWrapper>

@@ -11,8 +11,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
 
-    <!-- Lenis Smooth Scroll -->
+    <!-- Smooth Scroll & GSAP -->
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -29,8 +31,8 @@
               'upside-blue': '#0a192f',
               'glass-border': 'rgba(255, 9, 0, 0.3)',
               'glass-bg': 'rgba(20, 0, 0, 0.4)',
-              'neon-purple': '#FF0900', // Mapping old var to new red for compatibility
-              'electric-blue': '#FF4D4D', // Light red accent
+              'neon-purple': '#FF0900',
+              'electric-blue': '#FF4D4D',
             },
             fontFamily: {
               sans: ['Inter', 'sans-serif'],
@@ -102,6 +104,7 @@
       body {
         background-color: #020202;
         color: #ffffff;
+        overflow-x: hidden;
       }
       /* Custom Scrollbar */
       ::-webkit-scrollbar {
@@ -119,6 +122,18 @@
       }
       .text-stranger-glow {
         text-shadow: 0 0 10px rgba(255, 9, 0, 0.8), 0 0 20px rgba(255, 9, 0, 0.5);
+      }
+      .lenis.lenis-smooth {
+        height: auto;
+      }
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+      .lenis.lenis-scrolling iframe {
+        pointer-events: none;
       }
     </style>
   <script type="importmap">
@@ -138,7 +153,6 @@
 </head>
   <body>
     <div id="root"></div>
-    <!-- Make sure script type is module -->
     <script type="module" src="/index.tsx"></script>
   </body>
 </html>
